@@ -94,7 +94,7 @@ Personal site.
 |---|---|
 | GitHub | [@hoijun-kim](https://github.com/hoijun-kim) |
 | Email  | hoijun.kim00@gmail.com |
-| Site   | [hoit-chron.github.io](https://hoijun-kim.github.io/) |
+| Site   | [hoijun-kim.github.io/](https://hoijun-kim.github.io/) |
 
 <div align="center">
 <br>
