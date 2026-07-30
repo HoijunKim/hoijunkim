@@ -4,7 +4,7 @@
 
 <br>
 
-**[ github ](https://github.com/hoijun-kim)** &nbsp;/&nbsp; **[ site ](https://hoit-chron.github.io)** &nbsp;/&nbsp; **[ email ](mailto:hoijun.kim00@gmail.com)**
+**[ github ](https://github.com/hoijun-kim)** &nbsp;/&nbsp; **[ site ](https://hoijun-kim.github.io/)** &nbsp;/&nbsp; **[ email ](mailto:hoijun.kim00@gmail.com)**
 
 <br>
 
@@ -82,7 +82,7 @@ A Wails desktop control panel that drives many git repos from one window - launc
 
 Personal site.
 
-`->` [hoit-chron.github.io](https://hoit-chron.github.io)
+`->` [hoijun-kim.github.io/](https://hoijun-kim.github.io/)
 
 </details>
 
@@ -94,7 +94,7 @@ Personal site.
 |---|---|
 | GitHub | [@hoijun-kim](https://github.com/hoijun-kim) |
 | Email  | hoijun.kim00@gmail.com |
-| Site   | [hoit-chron.github.io](https://hoit-chron.github.io) |
+| Site   | [hoit-chron.github.io](https://hoijun-kim.github.io/) |
 
 <div align="center">
 <br>
