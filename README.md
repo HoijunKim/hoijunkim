@@ -1,14 +1,10 @@
 <div align="center">
 
-<img src="./assets/hero.svg?v=7" width="100%" alt="Hoijun Kim - biosignal ML researcher. A dark oscilloscope reading three forearm EMG channels and one video pose channel, decoded into a prosthetic grip.">
+<img src="./assets/hero.svg?v=9" width="100%" alt="Hoijun Kim - biosignal ML researcher. A dark oscilloscope reading three forearm EMG channels and one video pose channel, decoded into a prosthetic grip.">
 
 <br>
 
 **[ github ](https://github.com/hoijun-kim)** &nbsp;/&nbsp; **[ site ](https://hoijun-kim.github.io/)** &nbsp;/&nbsp; **[ email ](mailto:hoijun.kim00@gmail.com)**
-
-<br>
-
-**PhD candidate in biosignal ML & edge-AI** - turning EMG into prosthetic motion
 
 </div>
 
@@ -16,7 +12,7 @@
 
 - **PhD thesis** - video + EMG auto-labeling for prosthetic-hand control &nbsp;`defense 2026`
 - **Edge inference** - on-device models on Intel Lunar Lake NPU (OpenVINO)
-- **fleet** - Wails desktop multi-repo control panel &nbsp;`Go + Svelte + TS`
+- **fleet** - one window to drive every research repo &nbsp;`Go + Svelte + TS`
 
 <br>
 
@@ -24,15 +20,11 @@
 
 <div align="center">
 
-<img src="./assets/stack.svg?v=8" width="100%" alt="Tech stack as an oscilloscope probe bank. Each technology is a channel with a mini signal that encodes its character, plus a usage tag. Python is the main language.">
-
-<br><br>
-
-<img src="https://skillicons.dev/icons?i=py,pytorch,sklearn,opencv,go,ts,svelte,vite,nodejs,sass,cpp,bash,docker,git,linux,vscode&theme=dark&perline=8" alt="Python, PyTorch, scikit-learn, OpenCV, Go, TypeScript, Svelte, Vite, Node, Sass, C++, Bash, Docker, Git, Linux, VS Code">
+<img src="./assets/stack.svg?v=9" width="100%" alt="Tech stack as an oscilloscope probe bank: Python, PyTorch, NumPy and Pandas, OpenCV, Go, Svelte with TypeScript, OpenVINO on NPU, and SCSS. Each is a channel with a mini signal that encodes its character, plus a usage tag. Python is the main language.">
 
 <br>
 
-<sub>also &nbsp; OpenVINO &nbsp;/&nbsp; ONNX &nbsp;/&nbsp; NPU &nbsp;/&nbsp; Wails &nbsp;/&nbsp; NumPy &nbsp;/&nbsp; Pandas &nbsp;/&nbsp; Conda</sub>
+<sub>also &nbsp; scikit-learn &nbsp;/&nbsp; ONNX &nbsp;/&nbsp; Wails &nbsp;/&nbsp; C++ &nbsp;/&nbsp; Vite &nbsp;/&nbsp; Node &nbsp;/&nbsp; Docker &nbsp;/&nbsp; Git &nbsp;/&nbsp; Linux &nbsp;/&nbsp; Bash &nbsp;/&nbsp; Conda</sub>
 
 </div>
 
@@ -40,63 +32,9 @@
 
 ## Projects
 
-<sub>Click a channel to expand</sub>
-
-<details>
-<summary><code>CH1</code> &nbsp; <b>RNNsignal</b> &nbsp; <code>RESEARCH</code> &nbsp;|&nbsp; Python</summary>
-
-<br>
-
-Recurrent models over physiological / EMG time series - the signal-decoding core behind the prosthesis-control work.
-
-`->` [github.com/hoijun-kim/RNNsignal](https://github.com/hoijun-kim/RNNsignal)
-
-</details>
-
-<details>
-<summary><code>CH2</code> &nbsp; <b>SOD</b> &nbsp; <code>RESEARCH</code> &nbsp;|&nbsp; Python</summary>
-
-<br>
-
-Salient Object Detection - computer vision for finding what matters in a frame. Feeds the video side of the video + EMG pipeline.
-
-`->` [github.com/hoijun-kim/SOD](https://github.com/hoijun-kim/SOD)
-
-</details>
-
-<details>
-<summary><code>CH3</code> &nbsp; <b>fleet</b> &nbsp; <code>IN DEV</code> &nbsp;|&nbsp; Go + Svelte + TS</summary>
-
-<br>
-
-A Wails desktop control panel that drives many git repos from one window - launch, watch, and orchestrate work across projects.
-
-`->` in active development
-
-</details>
-
-<details>
-<summary><code>CH4</code> &nbsp; <b>hoit-chron.github.io</b> &nbsp; <code>LIVE</code> &nbsp;|&nbsp; SCSS</summary>
-
-<br>
-
-Personal site.
-
-`->` [hoijun-kim.github.io/](https://hoijun-kim.github.io/)
-
-</details>
-
-<br>
-
-## Contact
-
-| | |
-|---|---|
-| GitHub | [@hoijun-kim](https://github.com/hoijun-kim) |
-| Email  | hoijun.kim00@gmail.com |
-| Site   | [hoijun-kim.github.io/](https://hoijun-kim.github.io/) |
-
-<div align="center">
-<br>
-<sub><code>20 mV/div   500 ms/div   fs 2 kHz</code> - decoding muscle signals into motion</sub>
-</div>
+| | Project | What it is |
+|:--|:--|:--|
+| `CH1` | **[RNNsignal](https://github.com/hoijun-kim/RNNsignal)**<br><sub>`RESEARCH`</sub> | `Python` - recurrent models over physiological / EMG time series. The signal-decoding core behind the prosthesis-control work. |
+| `CH2` | **[SOD](https://github.com/hoijun-kim/SOD)**<br><sub>`RESEARCH`</sub> | `Python` - salient object detection, finding what matters in a frame. Feeds the video side of the video + EMG pipeline. |
+| `CH3` | **fleet**<br><sub>`IN DEV`</sub> | `Go + Svelte + TS` - a Wails desktop control panel that drives many git repos from one window: launch, watch, and orchestrate work across projects. Not public yet. |
+| `CH4` | **[Personal site](https://hoijun-kim.github.io/)**<br><sub>`LIVE`</sub> | `SCSS` - [hoijun-kim.github.io](https://hoijun-kim.github.io/) |

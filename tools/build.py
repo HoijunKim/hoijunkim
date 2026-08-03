@@ -86,23 +86,36 @@ def staircase(center, half, steps, x0, x1, n):
     return _path(pts)
 
 
+# ============================== layout budget ===============================
+# The README renders inside a ~780px column on GitHub, so an SVG is scaled by
+# (780 / viewBox width). Anything below ~11px after that scale is unreadable.
+# Both canvases are therefore sized close to the real column width instead of
+# being drawn huge and shrunk - keep new text at >= 12px in design units.
+HERO_W, HERO_H = 900, 360      # 2.5:1 - stays legible down to phone width
+STACK_W, STACK_H = 900, 420
+
+
 # ================================== hero ====================================
 def build_hero():
     T = "5s"
+    X0, X1 = 96, 700           # waveform span
     CH = [
-        (emg(140, 25, [(0.16, 0.05, 0.9, 46), (0.54, 0.06, 1.0, 52), (0.83, 0.045, 0.8, 44)], 11, 96, 1440, 300),
-         140, C1, "CH1", "FDS", "EMG", "0.51 mV", "p1"),
-        (emg(213, 25, [(0.30, 0.055, 0.85, 40), (0.68, 0.05, 0.95, 48)], 23, 96, 1440, 300),
-         213, C2, "CH2", "EDC", "EMG", "0.38 mV", "p2"),
-        (emg(286, 25, [(0.44, 0.05, 0.9, 50), (0.90, 0.04, 0.7, 42)], 37, 96, 1440, 300),
-         286, C3, "CH3", "APB", "EMG", "0.44 mV", "p3"),
-        (pose(359, 25, 96, 1440, 300), 359, C4, "CH4", "POSE", "VID", "23 fps", "p4"),
+        (emg(122, 18, [(0.16, 0.05, 0.9, 46), (0.54, 0.06, 1.0, 52), (0.83, 0.045, 0.8, 44)], 11, X0, X1, 260),
+         122, C1, "CH1", "FDS", "0.51 mV", "p1"),
+        (emg(172, 18, [(0.30, 0.055, 0.85, 40), (0.68, 0.05, 0.95, 48)], 23, X0, X1, 260),
+         172, C2, "CH2", "EDC", "0.38 mV", "p2"),
+        (emg(222, 18, [(0.44, 0.05, 0.9, 50), (0.90, 0.04, 0.7, 42)], 37, X0, X1, 260),
+         222, C3, "CH3", "APB", "0.44 mV", "p3"),
+        (pose(272, 18, X0, X1, 260), 272, C4, "CH4", "POSE", "23 fps", "p4"),
     ]
+    SX, SY, SW, SH = 18, 86, 864, 256          # screen rect
+    RAIL = 836                                  # decode rail centre
     s = io.StringIO(); W = s.write
     W('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-      'viewBox="0 0 1600 430" width="1600" height="430" role="img" aria-labelledby="ti de" '
+      'viewBox="0 0 %d %d" width="%d" height="%d" role="img" aria-labelledby="ti de" '
       'preserveAspectRatio="xMidYMid meet" '
-      'font-family="ui-monospace, SFMono-Regular, Menlo, \'Courier New\', \'Malgun Gothic\', monospace">\n')
+      'font-family="ui-monospace, SFMono-Regular, Menlo, \'Courier New\', \'Malgun Gothic\', monospace">\n'
+      % (HERO_W, HERO_H, HERO_W, HERO_H))
     W('<title id="ti">Hoijun Kim - biosignal and edge-AI researcher</title>\n')
     W('<desc id="de">A dark laboratory oscilloscope reading four looping biosignal channels - three '
       'forearm EMG channels (FDS, EDC, APB) and one video pose channel - with a sweeping scan bar and a '
@@ -116,65 +129,67 @@ def build_hero():
     W('<linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4da3ff" stop-opacity="0"/>'
       '<stop offset="0.78" stop-color="#4da3ff" stop-opacity="0.06"/>'
       '<stop offset="1" stop-color="#cfe4ff" stop-opacity="0.30"/></linearGradient>\n')
-    W('<filter id="glow" x="-8%" y="-45%" width="116%" height="190%"><feGaussianBlur stdDeviation="1.35" result="b"/>'
+    W('<filter id="glow" x="-8%" y="-45%" width="116%" height="190%"><feGaussianBlur stdDeviation="1.1" result="b"/>'
       '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>\n')
-    W('<pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">'
-      '<path d="M26 0H0V26" fill="none" stroke="#183a63" stroke-width="0.6" opacity="0.5"/></pattern>\n')
-    W('<clipPath id="screen"><rect x="22" y="98" width="1556" height="304" rx="7"/></clipPath>\n')
-    W('<clipPath id="namewipe"><rect x="34" y="28" width="0" height="58">'
-      f'<animate attributeName="width" values="0;640;640;640" keyTimes="0;0.34;0.94;1" dur="{T}" '
+    W('<pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">'
+      '<path d="M24 0H0V24" fill="none" stroke="#183a63" stroke-width="0.6" opacity="0.5"/></pattern>\n')
+    W('<clipPath id="screen"><rect x="%d" y="%d" width="%d" height="%d" rx="6"/></clipPath>\n' % (SX, SY, SW, SH))
+    W('<clipPath id="namewipe"><rect x="18" y="18" width="0" height="62">'
+      f'<animate attributeName="width" values="0;500;500;500" keyTimes="0;0.34;0.94;1" dur="{T}" '
       'repeatCount="indefinite" calcMode="spline" keySplines="0.2 0.7 0.2 1;0 0 1 1;0 0 1 1"/></rect></clipPath>\n')
     W('</defs>\n')
-    W('<rect x="0" y="0" width="1600" height="430" rx="18" fill="#03060d"/>\n')
-    W('<rect x="5" y="5" width="1590" height="420" rx="15" fill="url(#bg)" stroke="#1c4066" stroke-width="1.3"/>\n')
+    W('<rect x="0" y="0" width="%d" height="%d" rx="14" fill="#03060d"/>\n' % (HERO_W, HERO_H))
+    W('<rect x="4" y="4" width="%d" height="%d" rx="11" fill="url(#bg)" stroke="#1c4066" stroke-width="1.2"/>\n'
+      % (HERO_W - 8, HERO_H - 8))
     W('<g clip-path="url(#namewipe)">')
-    W('<text x="36" y="55" font-size="23" font-weight="700" letter-spacing="1" fill="%s" filter="url(#glow)">'
-      'Biosignal ML Researcher</text>' % BRIGHT)
-    W('<text x="37" y="78" font-size="12.5" letter-spacing="0.5" fill="%s">'
-      'decoding muscle signals into motion</text>' % DIM)
+    W('<text x="26" y="49" font-size="30" font-weight="700" letter-spacing="0.5" fill="%s" filter="url(#glow)">'
+      'Hoijun Kim</text>' % BRIGHT)
+    W('<text x="27" y="71" font-size="12.5" letter-spacing="0.4" fill="%s">'
+      'biosignal ML / edge-AI - decoding EMG into prosthetic motion</text>' % DIM)
     W('</g>\n')
-    W('<text x="1498" y="39" font-size="13" font-weight="700" letter-spacing="1.5" fill="%s">REC</text>' % RED)
-    W('<circle cx="1552" cy="34.5" r="4.5" fill="%s"><animate attributeName="opacity" '
+    W('<text x="820" y="34" font-size="12.5" font-weight="700" letter-spacing="1.5" fill="%s">REC</text>' % RED)
+    W('<circle cx="866" cy="29.5" r="4.5" fill="%s"><animate attributeName="opacity" '
       'values="1;1;0.12;0.12;1" keyTimes="0;0.45;0.5;0.55;1" dur="1.6s" repeatCount="indefinite"/></circle>\n' % RED)
     W('<g text-anchor="end">')
-    W('<text x="1560" y="62" font-size="12" letter-spacing="0.5" fill="%s">OpenVINO / Lunar Lake NPU</text>' % LABEL)
-    W('<text x="1560" y="80" font-size="12" letter-spacing="1" fill="%s">inference '
+    W('<text x="874" y="56" font-size="12.5" letter-spacing="0.4" fill="%s">OpenVINO / Lunar Lake NPU</text>' % LABEL)
+    W('<text x="874" y="74" font-size="12.5" letter-spacing="0.8" fill="%s">inference '
       '<tspan fill="%s" font-weight="700">LIVE</tspan></text>' % (LABEL, C2))
     W('</g>\n')
-    W('<rect x="22" y="98" width="1556" height="304" rx="7" fill="#060e1d"/>\n')
+    W('<rect x="%d" y="%d" width="%d" height="%d" rx="6" fill="#060e1d"/>\n' % (SX, SY, SW, SH))
     W('<g clip-path="url(#screen)">\n')
-    W('  <rect x="22" y="98" width="1556" height="304" fill="url(#grid)"/>\n')
-    for d, cy, col, code, mus, kind, val, pid in CH:
-        W('  <line x1="90" y1="%d" x2="1440" y2="%d" stroke="#26497a" stroke-width="0.7" '
-          'stroke-dasharray="2 5" opacity="0.6"/>\n' % (cy, cy))
-    W('  <rect x="22" y="0" width="1556" height="34" fill="#a9ccff" opacity="0.035">'
-      '<animateTransform attributeName="transform" type="translate" values="0,90;0,410;0,90" '
-      'dur="7s" repeatCount="indefinite"/></rect>\n')
-    for d, cy, col, code, mus, kind, val, pid in CH:
+    W('  <rect x="%d" y="%d" width="%d" height="%d" fill="url(#grid)"/>\n' % (SX, SY, SW, SH))
+    for d, cy, col, code, mus, val, pid in CH:
+        W('  <line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#26497a" stroke-width="0.7" '
+          'stroke-dasharray="2 5" opacity="0.6"/>\n' % (X0 - 6, cy, X1, cy))
+    W('  <rect x="%d" y="0" width="%d" height="30" fill="#a9ccff" opacity="0.035">'
+      '<animateTransform attributeName="transform" type="translate" values="0,%d;0,%d;0,%d" '
+      'dur="7s" repeatCount="indefinite"/></rect>\n' % (SX, SW, SY - 6, SY + SH - 24, SY - 6))
+    for d, cy, col, code, mus, val, pid in CH:
         W('  <path id="%s" d="%s" fill="none" stroke="%s" stroke-width="1.7" stroke-linejoin="round" '
           'stroke-linecap="round" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" filter="url(#glow)">'
           '<animate attributeName="stroke-dashoffset" values="1;0" dur="%s" repeatCount="indefinite" '
           'calcMode="linear"/></path>\n' % (pid, d, col, T))
-        W('  <circle r="2.7" fill="#eaf3ff" filter="url(#glow)">'
+        W('  <circle r="2.6" fill="#eaf3ff" filter="url(#glow)">'
           '<animateMotion dur="%s" repeatCount="indefinite" calcMode="linear" keyPoints="0;1" keyTimes="0;1">'
           '<mpath xlink:href="#%s"/></animateMotion></circle>\n' % (T, pid))
-    W('  <g><rect x="-140" y="98" width="140" height="304" fill="url(#sweep)"/>'
-      '<line x1="0" y1="98" x2="0" y2="402" stroke="#d3e6ff" stroke-width="1.1" opacity="0.55"/>'
-      '<animateTransform attributeName="transform" type="translate" values="90,0;1440,0" dur="%s" '
-      'repeatCount="indefinite" calcMode="linear"/></g>\n' % T)
+    W('  <g><rect x="-90" y="%d" width="90" height="%d" fill="url(#sweep)"/>'
+      '<line x1="0" y1="%d" x2="0" y2="%d" stroke="#d3e6ff" stroke-width="1.1" opacity="0.55"/>'
+      '<animateTransform attributeName="transform" type="translate" values="%d,0;%d,0" dur="%s" '
+      'repeatCount="indefinite" calcMode="linear"/></g>\n' % (SY, SH, SY, SY + SH, X0 - 6, X1, T))
     W('</g>\n')
-    W('<rect x="22" y="98" width="1556" height="304" rx="7" fill="url(#crt)" pointer-events="none"/>\n')
-    W('<rect x="22" y="98" width="1556" height="304" rx="7" fill="none" stroke="#2a5688" stroke-width="1"/>\n')
-    for d, cy, col, code, mus, kind, val, pid in CH:
-        W('<text x="34" y="%d" font-size="12.5" font-weight="700" letter-spacing="0.5" fill="%s">%s</text>' % (cy - 3, col, code))
-        W('<text x="34" y="%d" font-size="9" letter-spacing="0.5" fill="%s">%s %s</text>\n' % (cy + 9, LABEL, mus, kind))
-        W('<text x="1494" y="%d" text-anchor="end" font-size="10.5" fill="%s">%s</text>\n' % (cy + 3, col, val))
-    W('<text x="36" y="392" font-size="10.5" letter-spacing="0.5" fill="%s">'
-      '20 mV/div   500 ms/div   fs 2 kHz   TRIG auto</text>\n' % LABEL)
-    W('<line x1="1500" y1="110" x2="1500" y2="390" stroke="#1e4270" stroke-width="1" opacity="0.7"/>\n')
-    W('<text x="1538" y="132" text-anchor="middle" font-size="9" letter-spacing="1" fill="%s">DECODE</text>\n' % LABEL)
-    W('<text x="1538" y="146" text-anchor="middle" font-size="8.5" letter-spacing="0.5" fill="%s">-&gt; GRIP</text>\n' % AMBER)
-    W('<g transform="translate(1538,250)" stroke-linecap="round">\n')
+    W('<rect x="%d" y="%d" width="%d" height="%d" rx="6" fill="url(#crt)" pointer-events="none"/>\n' % (SX, SY, SW, SH))
+    W('<rect x="%d" y="%d" width="%d" height="%d" rx="6" fill="none" stroke="#2a5688" stroke-width="1"/>\n' % (SX, SY, SW, SH))
+    for d, cy, col, code, mus, val, pid in CH:
+        W('<text x="26" y="%d" font-size="13" letter-spacing="0.4">'
+          '<tspan font-weight="700" fill="%s">%s</tspan><tspan fill="%s"> %s</tspan></text>'
+          % (cy + 4.5, col, code, LABEL, mus))
+        W('<text x="782" y="%d" text-anchor="end" font-size="12.5" fill="%s">%s</text>\n' % (cy + 4.5, col, val))
+    W('<text x="26" y="330" font-size="12" letter-spacing="0.4" fill="%s">'
+      '20 mV/div   500 ms/div   fs 2 kHz   3x surface EMG + pose</text>\n' % LABEL)
+    W('<line x1="790" y1="96" x2="790" y2="332" stroke="#1e4270" stroke-width="1" opacity="0.7"/>\n')
+    W('<text x="%d" y="120" text-anchor="middle" font-size="11.5" letter-spacing="1" fill="%s">DECODE</text>\n' % (RAIL, LABEL))
+    W('<text x="%d" y="137" text-anchor="middle" font-size="12" font-weight="700" letter-spacing="0.5" fill="%s">-&gt; GRIP</text>\n' % (RAIL, AMBER))
+    W('<g transform="translate(%d,208)" stroke-linecap="round">\n' % RAIL)
     W('  <line x1="0" y1="36" x2="0" y2="16" stroke="%s" stroke-width="5"/>\n' % DIM)
     W('  <rect x="-8" y="8" width="16" height="8" rx="4" fill="%s"/>\n' % DIM)
     W('  <circle cx="0" cy="12" r="3" fill="%s"/>\n' % AMBER)
@@ -189,7 +204,7 @@ def build_hero():
       'keyTimes="0;0.42;0.56;0.82;1" dur="%s" repeatCount="indefinite" calcMode="spline" '
       'keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/></g>\n' % (AMBER, AMBER, T))
     W('</g>\n')
-    W('<text x="1538" y="372" text-anchor="middle" font-size="9" letter-spacing="1" fill="%s">ACTUATOR</text>\n' % LABEL)
+    W('<text x="%d" y="322" text-anchor="middle" font-size="11.5" letter-spacing="1" fill="%s">ACTUATOR</text>\n' % (RAIL, LABEL))
     W('</svg>\n')
     return s.getvalue()
 
@@ -197,68 +212,84 @@ def build_hero():
 # ================================== stack ===================================
 def build_stack():
     T = "4.5s"
-    WX0, WX1 = 340, 966   # sparkline x-range
+    WX0, WX1 = 316, 686        # sparkline x-range, inside the signal window
+    CY = [92, 130, 168, 206, 244, 282, 320, 358]
+    HALF = 11
     # probe, tech, note, color, sparkline, cy, usage-tag, is_main
     ROWS = [
-        ("PY",  "Python",         "signal / ML",       C1,   emg(92, 12, [(0.35, 0.08, 0.9, 22), (0.7, 0.07, 0.9, 22)], 7, WX0, WX1, 200, 1.1), 92,  "primary", True),
-        ("PT",  "PyTorch",        "deep learning",     PT_C, emg(132, 12, [(0.25, 0.06, 0.9, 34), (0.55, 0.05, 0.9, 34), (0.82, 0.05, 0.9, 34)], 15, WX0, WX1, 200, 1.1), 132, "daily", False),
-        ("GO",  "Go",             "systems / desktop", C2,   square(172, 12, WX0, WX1, 200), 172, "daily", False),
-        ("TS",  "Svelte + TS",    "reactive UI",       C4,   sine(212, 12, 3.0, WX0, WX1, 200), 212, "daily", False),
-        ("AI",  "OpenVINO / NPU", "edge inference",    AMBER, staircase(252, 12, 7, WX0, WX1, 200), 252, "exploring", False),
-        ("WEB", "SCSS / Web",     "frontend",          C3,   sine(292, 12, 2.2, WX0, WX1, 200), 292, "occasional", False),
+        ("PY",  "Python",         "signal / ML",    C1,
+         emg(CY[0], HALF, [(0.35, 0.08, 0.9, 22), (0.7, 0.07, 0.9, 22)], 7, WX0, WX1, 200, 1.0), CY[0], "primary", True),
+        ("PT",  "PyTorch",        "deep learning",  PT_C,
+         emg(CY[1], HALF, [(0.25, 0.06, 0.9, 34), (0.55, 0.05, 0.9, 34), (0.82, 0.05, 0.9, 34)], 15, WX0, WX1, 200, 1.0), CY[1], "daily", False),
+        ("NP",  "NumPy / Pandas", "data frames",    C4,
+         staircase(CY[2], HALF, 5, WX0, WX1, 200), CY[2], "daily", False),
+        ("CV",  "OpenCV",         "video / pose",   C3,
+         pose(CY[3], HALF, WX0, WX1, 200), CY[3], "daily", False),
+        ("GO",  "Go",             "desktop / CLI",  C2,
+         square(CY[4], HALF, WX0, WX1, 200), CY[4], "daily", False),
+        ("TS",  "Svelte + TS",    "reactive UI",    C1,
+         sine(CY[5], HALF, 3.0, WX0, WX1, 200), CY[5], "daily", False),
+        ("AI",  "OpenVINO / NPU", "edge inference", AMBER,
+         staircase(CY[6], HALF, 7, WX0, WX1, 200), CY[6], "exploring", False),
+        ("WEB", "SCSS / Web",     "frontend",       C3,
+         sine(CY[7], HALF, 2.2, WX0, WX1, 200), CY[7], "occasional", False),
     ]
+    WIN = (298, 72, 406, 332)  # signal window x, y, w, h
     s = io.StringIO(); W = s.write
     W('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-      'viewBox="0 0 1200 330" width="1200" height="330" role="img" aria-labelledby="ti de" '
+      'viewBox="0 0 %d %d" width="%d" height="%d" role="img" aria-labelledby="ti de" '
       'preserveAspectRatio="xMidYMid meet" '
-      'font-family="ui-monospace, SFMono-Regular, Menlo, \'Courier New\', \'Malgun Gothic\', monospace">\n')
+      'font-family="ui-monospace, SFMono-Regular, Menlo, \'Courier New\', \'Malgun Gothic\', monospace">\n'
+      % (STACK_W, STACK_H, STACK_W, STACK_H))
     W('<title id="ti">Tech stack - probe bank</title>\n')
-    W('<desc id="de">A probe bank listing the stack as oscilloscope channels, each with a mini signal '
-      'that encodes its character (Go a square wave, OpenVINO NPU an INT8 staircase, and so on) and a '
+    W('<desc id="de">A probe bank listing the stack as oscilloscope channels - Python, PyTorch, '
+      'NumPy and Pandas, OpenCV, Go, Svelte with TypeScript, OpenVINO on NPU, and SCSS - each with a mini '
+      'signal that encodes its character (Go a square wave, OpenVINO an INT8 staircase, and so on) and a '
       'usage tag. Python is the main language.</desc>\n')
     W('<defs>')
     W('<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080f1e"/>'
       '<stop offset="1" stop-color="#05080f"/></linearGradient>')
     W('<filter id="glow" x="-6%" y="-60%" width="112%" height="220%"><feGaussianBlur stdDeviation="1.15" result="b"/>'
       '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>')
-    W('<pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse">'
-      '<path d="M26 0H0V26" fill="none" stroke="#183a63" stroke-width="0.6" opacity="0.4"/></pattern>')
-    W('<clipPath id="scr"><rect x="300" y="66" width="676" height="248" rx="4"/></clipPath>')
+    W('<pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">'
+      '<path d="M24 0H0V24" fill="none" stroke="#183a63" stroke-width="0.6" opacity="0.4"/></pattern>')
+    W('<clipPath id="scr"><rect x="%d" y="%d" width="%d" height="%d" rx="4"/></clipPath>' % WIN)
     W('</defs>\n')
-    W('<rect x="0" y="0" width="1200" height="330" rx="16" fill="#03060d"/>\n')
-    W('<rect x="5" y="5" width="1190" height="320" rx="13" fill="url(#bg)" stroke="#1c4066" stroke-width="1.2"/>\n')
+    W('<rect x="0" y="0" width="%d" height="%d" rx="14" fill="#03060d"/>\n' % (STACK_W, STACK_H))
+    W('<rect x="4" y="4" width="%d" height="%d" rx="11" fill="url(#bg)" stroke="#1c4066" stroke-width="1.2"/>\n'
+      % (STACK_W - 8, STACK_H - 8))
     # header
-    W('<text x="26" y="40" font-size="17" font-weight="700" letter-spacing="2" fill="%s">PROBE BANK</text>\n' % BRIGHT)
-    W('<text x="176" y="40" font-size="12" letter-spacing="0.5" fill="%s">/ stack</text>\n' % DIM)
-    W('<text x="1092" y="40" text-anchor="end" font-size="11" letter-spacing="1" fill="%s">MAIN</text>' % LABEL)
-    W('<text x="1174" y="40" text-anchor="end" font-size="12" font-weight="700" letter-spacing="0.5" fill="%s">Python</text>\n' % AMBER)
+    W('<text x="24" y="40" font-size="17" font-weight="700" letter-spacing="2" fill="%s">PROBE BANK</text>\n' % BRIGHT)
+    W('<text x="162" y="40" font-size="12.5" letter-spacing="0.4" fill="%s">/ stack</text>\n' % DIM)
+    W('<text x="800" y="40" text-anchor="end" font-size="11.5" letter-spacing="1" fill="%s">MAIN</text>' % LABEL)
+    W('<text x="876" y="40" text-anchor="end" font-size="13" font-weight="700" letter-spacing="0.4" fill="%s">Python</text>\n' % AMBER)
     # column captions
-    W('<text x="638" y="60" text-anchor="middle" font-size="8.5" letter-spacing="1.5" fill="%s">SIGNAL</text>' % LABEL)
-    W('<text x="1120" y="60" text-anchor="middle" font-size="8.5" letter-spacing="1.5" fill="%s">USAGE</text>\n' % LABEL)
+    W('<text x="501" y="62" text-anchor="middle" font-size="10" letter-spacing="1.5" fill="%s">SIGNAL</text>' % LABEL)
+    W('<text x="838" y="62" text-anchor="middle" font-size="10" letter-spacing="1.5" fill="%s">USAGE</text>\n' % LABEL)
     # signal window
-    W('<rect x="300" y="66" width="676" height="248" rx="4" fill="#060e1d" stroke="#1e4270" stroke-width="0.8"/>\n')
+    W('<rect x="%d" y="%d" width="%d" height="%d" rx="4" fill="#060e1d" stroke="#1e4270" stroke-width="0.8"/>\n' % WIN)
     W('<g clip-path="url(#scr)">')
-    W('<rect x="300" y="66" width="676" height="248" fill="url(#grid)"/>')
+    W('<rect x="%d" y="%d" width="%d" height="%d" fill="url(#grid)"/>' % WIN)
     for probe, tech, note, col, d, cy, cat, main in ROWS:
         W('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#26497a" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.5"/>' % (WX0, cy, WX1, cy))
     for i, (probe, tech, note, col, d, cy, cat, main) in enumerate(ROWS):
-        dly = "%.2fs" % (i * 0.22)
+        dly = "%.2fs" % (i * 0.18)
         W('<path d="%s" fill="none" stroke="%s" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" '
           'pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" filter="url(#glow)">'
           '<animate attributeName="stroke-dashoffset" values="1;0" dur="%s" begin="%s" repeatCount="indefinite" calcMode="linear"/></path>'
           % (d, col, T, dly))
     W('</g>\n')
-    # rows: probe chip, tech, note, usage tag (MAIN pill for the main language)
+    # rows: probe chip, tech + note on one line, usage tag (MAIN pill for the main language)
     for probe, tech, note, col, d, cy, cat, main in ROWS:
-        W('<rect x="26" y="%d" width="36" height="20" rx="3" fill="#0b1d34" stroke="%s" stroke-width="0.9"/>' % (cy - 10, col))
-        W('<text x="44" y="%d" text-anchor="middle" font-size="11" font-weight="700" fill="%s">%s</text>' % (cy + 4, col, probe))
-        W('<text x="78" y="%d" font-size="14.5" font-weight="700" fill="%s">%s</text>' % (cy + 1, BRIGHT, tech))
-        W('<text x="78" y="%d" font-size="9" letter-spacing="0.3" fill="%s">%s</text>' % (cy + 14, LABEL, note))
+        W('<rect x="22" y="%d" width="34" height="20" rx="3" fill="#0b1d34" stroke="%s" stroke-width="0.9"/>' % (cy - 10, col))
+        W('<text x="39" y="%d" text-anchor="middle" font-size="11" font-weight="700" fill="%s">%s</text>' % (cy + 4, col, probe))
+        W('<text x="64" y="%d" font-size="13.5" font-weight="700" fill="%s">%s</text>' % (cy + 4.5, BRIGHT, tech))
+        W('<text x="186" y="%d" font-size="12" letter-spacing="0.3" fill="%s">%s</text>' % (cy + 4.5, LABEL, note))
         if main:
-            W('<rect x="1120" y="%d" width="54" height="18" rx="9" fill="none" stroke="%s" stroke-width="1"/>' % (cy - 9, AMBER))
-            W('<text x="1147" y="%d" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="1" fill="%s">MAIN</text>\n' % (cy + 4, AMBER))
+            W('<rect x="816" y="%d" width="60" height="20" rx="10" fill="none" stroke="%s" stroke-width="1"/>' % (cy - 10, AMBER))
+            W('<text x="846" y="%d" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1" fill="%s">MAIN</text>\n' % (cy + 4, AMBER))
         else:
-            W('<text x="1174" y="%d" text-anchor="end" font-size="10.5" letter-spacing="0.5" fill="%s">%s</text>\n' % (cy + 4, DIM, cat))
+            W('<text x="876" y="%d" text-anchor="end" font-size="12" letter-spacing="0.4" fill="%s">%s</text>\n' % (cy + 4.5, DIM, cat))
     W('</svg>\n')
     return s.getvalue()
 
