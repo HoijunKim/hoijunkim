@@ -4,12 +4,12 @@ Regenerate the profile artwork.
 
     python tools/build.py
 
-Writes assets/hero.svg and assets/stack.svg. Deterministic (fixed seeds), so
-re-running gives byte-identical output. Everything is self-contained, pure
-SMIL/CSS animated SVG - no JavaScript, no external references - so it renders
-and animates when GitHub serves it through its image proxy.
+Writes assets/hero.svg. Deterministic (fixed seeds), so re-running gives
+byte-identical output. Everything is self-contained, pure SMIL/CSS animated
+SVG - no JavaScript, no external references - so it renders and animates when
+GitHub serves it through its image proxy.
 
-Tweak colors / text / waveforms here, then re-run and commit the assets.
+Tweak colors / text / waveforms here, then re-run and commit the asset.
 """
 import math, random, io, os
 
@@ -55,44 +55,16 @@ def pose(center, half, x0, x1, n):
     return _path(pts)
 
 
-def square(center, half, x0, x1, n, period=0.14):
-    pts = []
-    for i in range(n):
-        x = x0 + (x1 - x0) * i / (n - 1)
-        t = i / (n - 1)
-        y = half * 0.8 if (int(t / period) % 2 == 0) else -half * 0.8
-        pts.append((x, center - y))
-    return _path(pts)
-
-
-def sine(center, half, freq, x0, x1, n):
-    pts = []
-    for i in range(n):
-        x = x0 + (x1 - x0) * i / (n - 1)
-        t = i / (n - 1)
-        y = half * 0.78 * math.sin(t * freq * 2 * math.pi) + half * 0.15 * math.sin(t * freq * 2.3 * 2 * math.pi + 1)
-        pts.append((x, center - y))
-    return _path(pts)
-
-
-def staircase(center, half, steps, x0, x1, n):
-    pts = []
-    for i in range(n):
-        x = x0 + (x1 - x0) * i / (n - 1)
-        t = i / (n - 1)
-        phase = (t * 2.0) % 1.0
-        lvl = math.floor(phase * steps) / (steps - 1)
-        pts.append((x, center - (lvl * 2 - 1) * half * 0.85))
-    return _path(pts)
-
-
 # ============================== layout budget ===============================
 # The README renders inside a ~780px column on GitHub, so an SVG is scaled by
 # (780 / viewBox width). Anything below ~11px after that scale is unreadable.
-# Both canvases are therefore sized close to the real column width instead of
-# being drawn huge and shrunk - keep new text at >= 12px in design units.
+# The canvas is therefore sized close to the real column width instead of being
+# drawn huge and shrunk - keep new text at >= 12px in design units.
+#
+# Only identity lives in the artwork. Anything that is really a list or a table
+# (the stack, the project index) belongs in markdown, where it stays
+# selectable, searchable, and theme-aware.
 HERO_W, HERO_H = 900, 360      # 2.5:1 - stays legible down to phone width
-STACK_W, STACK_H = 900, 420
 
 
 # ================================== hero ====================================
@@ -209,94 +181,9 @@ def build_hero():
     return s.getvalue()
 
 
-# ================================== stack ===================================
-def build_stack():
-    T = "4.5s"
-    WX0, WX1 = 316, 686        # sparkline x-range, inside the signal window
-    CY = [92, 130, 168, 206, 244, 282, 320, 358]
-    HALF = 11
-    # probe, tech, note, color, sparkline, cy, usage-tag, is_main
-    ROWS = [
-        ("PY",  "Python",         "signal / ML",    C1,
-         emg(CY[0], HALF, [(0.35, 0.08, 0.9, 22), (0.7, 0.07, 0.9, 22)], 7, WX0, WX1, 200, 1.0), CY[0], "primary", True),
-        ("PT",  "PyTorch",        "deep learning",  PT_C,
-         emg(CY[1], HALF, [(0.25, 0.06, 0.9, 34), (0.55, 0.05, 0.9, 34), (0.82, 0.05, 0.9, 34)], 15, WX0, WX1, 200, 1.0), CY[1], "daily", False),
-        ("NP",  "NumPy / Pandas", "data frames",    C4,
-         staircase(CY[2], HALF, 5, WX0, WX1, 200), CY[2], "daily", False),
-        ("CV",  "OpenCV",         "video / pose",   C3,
-         pose(CY[3], HALF, WX0, WX1, 200), CY[3], "daily", False),
-        ("GO",  "Go",             "desktop / CLI",  C2,
-         square(CY[4], HALF, WX0, WX1, 200), CY[4], "daily", False),
-        ("TS",  "Svelte + TS",    "reactive UI",    C1,
-         sine(CY[5], HALF, 3.0, WX0, WX1, 200), CY[5], "daily", False),
-        ("AI",  "OpenVINO / NPU", "edge inference", AMBER,
-         staircase(CY[6], HALF, 7, WX0, WX1, 200), CY[6], "exploring", False),
-        ("WEB", "SCSS / Web",     "frontend",       C3,
-         sine(CY[7], HALF, 2.2, WX0, WX1, 200), CY[7], "occasional", False),
-    ]
-    WIN = (298, 72, 406, 332)  # signal window x, y, w, h
-    s = io.StringIO(); W = s.write
-    W('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-      'viewBox="0 0 %d %d" width="%d" height="%d" role="img" aria-labelledby="ti de" '
-      'preserveAspectRatio="xMidYMid meet" '
-      'font-family="ui-monospace, SFMono-Regular, Menlo, \'Courier New\', \'Malgun Gothic\', monospace">\n'
-      % (STACK_W, STACK_H, STACK_W, STACK_H))
-    W('<title id="ti">Tech stack - probe bank</title>\n')
-    W('<desc id="de">A probe bank listing the stack as oscilloscope channels - Python, PyTorch, '
-      'NumPy and Pandas, OpenCV, Go, Svelte with TypeScript, OpenVINO on NPU, and SCSS - each with a mini '
-      'signal that encodes its character (Go a square wave, OpenVINO an INT8 staircase, and so on) and a '
-      'usage tag. Python is the main language.</desc>\n')
-    W('<defs>')
-    W('<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080f1e"/>'
-      '<stop offset="1" stop-color="#05080f"/></linearGradient>')
-    W('<filter id="glow" x="-6%" y="-60%" width="112%" height="220%"><feGaussianBlur stdDeviation="1.15" result="b"/>'
-      '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>')
-    W('<pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">'
-      '<path d="M24 0H0V24" fill="none" stroke="#183a63" stroke-width="0.6" opacity="0.4"/></pattern>')
-    W('<clipPath id="scr"><rect x="%d" y="%d" width="%d" height="%d" rx="4"/></clipPath>' % WIN)
-    W('</defs>\n')
-    W('<rect x="0" y="0" width="%d" height="%d" rx="14" fill="#03060d"/>\n' % (STACK_W, STACK_H))
-    W('<rect x="4" y="4" width="%d" height="%d" rx="11" fill="url(#bg)" stroke="#1c4066" stroke-width="1.2"/>\n'
-      % (STACK_W - 8, STACK_H - 8))
-    # header
-    W('<text x="24" y="40" font-size="17" font-weight="700" letter-spacing="2" fill="%s">PROBE BANK</text>\n' % BRIGHT)
-    W('<text x="162" y="40" font-size="12.5" letter-spacing="0.4" fill="%s">/ stack</text>\n' % DIM)
-    W('<text x="800" y="40" text-anchor="end" font-size="11.5" letter-spacing="1" fill="%s">MAIN</text>' % LABEL)
-    W('<text x="876" y="40" text-anchor="end" font-size="13" font-weight="700" letter-spacing="0.4" fill="%s">Python</text>\n' % AMBER)
-    # column captions
-    W('<text x="501" y="62" text-anchor="middle" font-size="10" letter-spacing="1.5" fill="%s">SIGNAL</text>' % LABEL)
-    W('<text x="838" y="62" text-anchor="middle" font-size="10" letter-spacing="1.5" fill="%s">USAGE</text>\n' % LABEL)
-    # signal window
-    W('<rect x="%d" y="%d" width="%d" height="%d" rx="4" fill="#060e1d" stroke="#1e4270" stroke-width="0.8"/>\n' % WIN)
-    W('<g clip-path="url(#scr)">')
-    W('<rect x="%d" y="%d" width="%d" height="%d" fill="url(#grid)"/>' % WIN)
-    for probe, tech, note, col, d, cy, cat, main in ROWS:
-        W('<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#26497a" stroke-width="0.6" stroke-dasharray="2 5" opacity="0.5"/>' % (WX0, cy, WX1, cy))
-    for i, (probe, tech, note, col, d, cy, cat, main) in enumerate(ROWS):
-        dly = "%.2fs" % (i * 0.18)
-        W('<path d="%s" fill="none" stroke="%s" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" '
-          'pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" filter="url(#glow)">'
-          '<animate attributeName="stroke-dashoffset" values="1;0" dur="%s" begin="%s" repeatCount="indefinite" calcMode="linear"/></path>'
-          % (d, col, T, dly))
-    W('</g>\n')
-    # rows: probe chip, tech + note on one line, usage tag (MAIN pill for the main language)
-    for probe, tech, note, col, d, cy, cat, main in ROWS:
-        W('<rect x="22" y="%d" width="34" height="20" rx="3" fill="#0b1d34" stroke="%s" stroke-width="0.9"/>' % (cy - 10, col))
-        W('<text x="39" y="%d" text-anchor="middle" font-size="11" font-weight="700" fill="%s">%s</text>' % (cy + 4, col, probe))
-        W('<text x="64" y="%d" font-size="13.5" font-weight="700" fill="%s">%s</text>' % (cy + 4.5, BRIGHT, tech))
-        W('<text x="186" y="%d" font-size="12" letter-spacing="0.3" fill="%s">%s</text>' % (cy + 4.5, LABEL, note))
-        if main:
-            W('<rect x="816" y="%d" width="60" height="20" rx="10" fill="none" stroke="%s" stroke-width="1"/>' % (cy - 10, AMBER))
-            W('<text x="846" y="%d" text-anchor="middle" font-size="10.5" font-weight="700" letter-spacing="1" fill="%s">MAIN</text>\n' % (cy + 4, AMBER))
-        else:
-            W('<text x="876" y="%d" text-anchor="end" font-size="12" letter-spacing="0.4" fill="%s">%s</text>\n' % (cy + 4.5, DIM, cat))
-    W('</svg>\n')
-    return s.getvalue()
-
-
 def main():
     os.makedirs(ASSETS, exist_ok=True)
-    for name, data in (("hero.svg", build_hero()), ("stack.svg", build_stack())):
+    for name, data in (("hero.svg", build_hero()),):
         p = os.path.join(ASSETS, name)
         with open(p, "w", encoding="utf-8") as f:
             f.write(data)

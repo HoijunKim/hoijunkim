@@ -18,15 +18,18 @@
 
 ## Tech Stack
 
-<div align="center">
-
-<img src="./assets/stack.svg?v=9" width="100%" alt="Tech stack as an oscilloscope probe bank: Python, PyTorch, NumPy and Pandas, OpenCV, Go, Svelte with TypeScript, OpenVINO on NPU, and SCSS. Each is a channel with a mini signal that encodes its character, plus a usage tag. Python is the main language.">
-
-<br>
+| Tool | Used for | How often |
+|:--|:--|:--|
+| **Python** | signal processing / ML | `MAIN` |
+| **PyTorch** | deep learning | daily |
+| **NumPy / Pandas** | data frames | daily |
+| **OpenCV** | video / pose | daily |
+| **Go** | desktop / CLI | daily |
+| **Svelte + TS** | reactive UI | daily |
+| **OpenVINO / NPU** | edge inference | exploring |
+| **SCSS** | frontend | occasional |
 
 <sub>also &nbsp; scikit-learn &nbsp;/&nbsp; ONNX &nbsp;/&nbsp; Wails &nbsp;/&nbsp; C++ &nbsp;/&nbsp; Vite &nbsp;/&nbsp; Node &nbsp;/&nbsp; Docker &nbsp;/&nbsp; Git &nbsp;/&nbsp; Linux &nbsp;/&nbsp; Bash &nbsp;/&nbsp; Conda</sub>
-
-</div>
 
 <br>
 
