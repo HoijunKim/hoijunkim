@@ -4,7 +4,7 @@
 
 <br>
 
-**[ github ](https://github.com/hoijun-kim)** &nbsp;/&nbsp; **[ site ](https://hoijun-kim.github.io/)** &nbsp;/&nbsp; **[ email ](mailto:hoijun.kim00@gmail.com)**
+**[ github ](https://github.com/hoijunkim)** &nbsp;/&nbsp; **[ site ](https://hoijunkim.github.io/)** &nbsp;/&nbsp; **[ email ](mailto:hoijun.kim00@gmail.com)**
 
 </div>
 
@@ -37,7 +37,7 @@
 
 | | Project | What it is |
 |:--|:--|:--|
-| `CH1` | **[RNNsignal](https://github.com/hoijun-kim/RNNsignal)**<br><sub>`RESEARCH`</sub> | `Python` - recurrent models over physiological / EMG time series. The signal-decoding core behind the prosthesis-control work. |
-| `CH2` | **[SOD](https://github.com/hoijun-kim/SOD)**<br><sub>`RESEARCH`</sub> | `Python` - salient object detection, finding what matters in a frame. Feeds the video side of the video + EMG pipeline. |
+| `CH1` | **[RNNsignal](https://github.com/hoijunkim/RNNsignal)**<br><sub>`RESEARCH`</sub> | `Python` - recurrent models over physiological / EMG time series. The signal-decoding core behind the prosthesis-control work. |
+| `CH2` | **[SOD](https://github.com/hoijunkim/SOD)**<br><sub>`RESEARCH`</sub> | `Python` - salient object detection, finding what matters in a frame. Feeds the video side of the video + EMG pipeline. |
 | `CH3` | **fleet**<br><sub>`IN DEV`</sub> | `Go + Svelte + TS` - a Wails desktop control panel that drives many git repos from one window: launch, watch, and orchestrate work across projects. Not public yet. |
-| `CH4` | **[Personal site](https://hoijun-kim.github.io/)**<br><sub>`LIVE`</sub> | `SCSS` - [hoijun-kim.github.io](https://hoijun-kim.github.io/) |
+| `CH4` | **[Personal site](https://hoijunkim.github.io/)**<br><sub>`LIVE`</sub> | `SCSS` - [hoijunkim.github.io](https://hoijunkim.github.io/) |
