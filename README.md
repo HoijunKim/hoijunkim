@@ -1,8 +1,4 @@
-# Hoijun Kim
-
-PhD researcher in biosignal ML. My thesis work decodes surface EMG for prosthetic-hand control. I also write desktop tools in Go.
-
-[hoijunkim.github.io](https://hoijunkim.github.io/) · [hoijun.kim00@gmail.com](mailto:hoijun.kim00@gmail.com)
+![](assets/header.svg)
 
 ## Tools
 
