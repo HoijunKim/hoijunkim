@@ -1,0 +1,24 @@
+name: writing
+
+# GitHub pauses scheduled workflows after 60 days without repository activity;
+# run it by hand (workflow_dispatch) to wake it up.
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 tools/writing.py
+      - run: |
+          git diff --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: refresh writing list"
+          git push
