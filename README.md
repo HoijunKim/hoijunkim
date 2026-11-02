@@ -1,43 +1,28 @@
-<div align="center">
+# Hoijun Kim
 
-<img src="./assets/hero.svg?v=9" width="100%" alt="Hoijun Kim - biosignal ML researcher. A dark oscilloscope reading three forearm EMG channels and one video pose channel, decoded into a prosthetic grip.">
+PhD researcher in biosignal ML. My thesis work decodes surface EMG for prosthetic-hand control. I also write desktop tools in Go.
 
-<br>
+[hoijunkim.github.io](https://hoijunkim.github.io/) · [hoijun.kim00@gmail.com](mailto:hoijun.kim00@gmail.com)
 
-**[ github ](https://github.com/hoijunkim)** &nbsp;/&nbsp; **[ site ](https://hoijunkim.github.io/)** &nbsp;/&nbsp; **[ email ](mailto:hoijun.kim00@gmail.com)**
+## Tools
 
-</div>
+Go + Wails + Svelte. Builds are on each repo's Releases page.
 
-## Focus
-
-- **PhD thesis** - video + EMG auto-labeling for prosthetic-hand control &nbsp;`defense 2026`
-- **Edge inference** - on-device models on Intel Lunar Lake NPU (OpenVINO)
-- **fleet** - one window to drive every research repo &nbsp;`Go + Svelte + TS`
-
-<br>
-
-## Tech Stack
-
-| Tool | Used for | How often |
+| Project | What it does | Runs on |
 |:--|:--|:--|
-| **Python** | signal processing / ML | `MAIN` |
-| **PyTorch** | deep learning | daily |
-| **NumPy / Pandas** | data frames | daily |
-| **OpenCV** | video / pose | daily |
-| **Go** | desktop / CLI | daily |
-| **Svelte + TS** | reactive UI | daily |
-| **OpenVINO / NPU** | edge inference | exploring |
-| **SCSS** | frontend | occasional |
+| [fleet](https://github.com/hoijunkim/fleet) | Dashboard for every git repo under your project roots. See what is dirty or behind, then fetch, commit, resolve conflicts and search across all of them. | Windows, macOS, Linux |
+| [shape](https://github.com/hoijunkim/shape) | Browse JSON, NDJSON, CSV, TSV, Parquet and SQLite files as a table. Filters show the equivalent jq and SQL. Also ships as a CLI profiler. | Windows, macOS, Linux |
+| [gifly](https://github.com/hoijunkim/gifly) | Video or images to GIF, WebP or APNG, with a live size estimate. | Windows |
+| [flip](https://github.com/hoijunkim/flip) | Captures a screen region page by page, then exports images or a PDF. | Windows |
 
-<sub>also &nbsp; scikit-learn &nbsp;/&nbsp; ONNX &nbsp;/&nbsp; Wails &nbsp;/&nbsp; C++ &nbsp;/&nbsp; Vite &nbsp;/&nbsp; Node &nbsp;/&nbsp; Docker &nbsp;/&nbsp; Git &nbsp;/&nbsp; Linux &nbsp;/&nbsp; Bash &nbsp;/&nbsp; Conda</sub>
+## Research
 
-<br>
+- PhD thesis: automatic EMG labeling from video motion, for prosthetic-hand control. Defense in 2026.
+- [RNNsignal](https://github.com/hoijunkim/RNNsignal): EMG classifiers in PyTorch. A GRU stack labels every timestep; an LSTM variant labels whole windows.
+- On-device inference on the Intel Lunar Lake NPU with OpenVINO.
 
-## Projects
+## Stack
 
-| | Project | What it is |
-|:--|:--|:--|
-| `CH1` | **[RNNsignal](https://github.com/hoijunkim/RNNsignal)**<br><sub>`RESEARCH`</sub> | `Python` - recurrent models over physiological / EMG time series. The signal-decoding core behind the prosthesis-control work. |
-| `CH2` | **[SOD](https://github.com/hoijunkim/SOD)**<br><sub>`RESEARCH`</sub> | `Python` - salient object detection, finding what matters in a frame. Feeds the video side of the video + EMG pipeline. |
-| `CH3` | **fleet**<br><sub>`IN DEV`</sub> | `Go + Svelte + TS` - a Wails desktop control panel that drives many git repos from one window: launch, watch, and orchestrate work across projects. Not public yet. |
-| `CH4` | **[Personal site](https://hoijunkim.github.io/)**<br><sub>`LIVE`</sub> | `SCSS` - [hoijunkim.github.io](https://hoijunkim.github.io/) |
+- ML and signals: Python, PyTorch, NumPy, pandas, scikit-learn, OpenCV, ONNX, OpenVINO
+- Desktop and web: Go, Wails, Svelte, TypeScript, Vite, Node, SCSS
+- Other: C++, Linux, Docker, Bash, Conda, Git
