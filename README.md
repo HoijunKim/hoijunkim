@@ -61,4 +61,4 @@ Captures a screen region page by page, then exports images or a PDF.</p>
 
 ## Stats
 
-<img src="profile/stats.svg" height="145" alt="GitHub stats"> <img src="profile/top-langs.svg" height="145" alt="Most used languages in public repos">
+<img src="profile/stats.svg" alt="Contributions, active days, longest streak and pull requests over the last 12 months, and the language mix of public repos">
