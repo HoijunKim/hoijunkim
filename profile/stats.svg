@@ -16,7 +16,7 @@
 <line x1="618.0" y1="64" x2="618.0" y2="142" stroke="#30363d"/>
 <text x="638.0" y="78">Pull requests</text>
 <text x="638.0" y="112" class="value">35</text>
-<polyline points="24.0,142.0 37.6,142.0 51.3,142.0 64.9,142.0 78.5,142.0 92.2,142.0 105.8,133.2 119.5,126.2 133.1,122.0 146.7,133.2 160.4,141.1 174.0,140.1" fill="none" stroke="#9198a1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="24.0,142.0 37.6,142.0 51.3,142.0 64.9,142.0 78.5,142.0 92.2,142.0 105.8,132.5 119.5,127.2 133.1,122.0 146.7,133.9 160.4,141.1 174.0,140.1" fill="none" stroke="#9198a1" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="174.0" cy="140.1" r="5" fill="#3987e5" stroke="#161b22" stroke-width="2"/>
 <line x1="24" y1="166" x2="816" y2="166" stroke="#30363d"/>
 <text x="24" y="196" class="head">Languages in public repos</text>
